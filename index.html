@@ -13,13 +13,42 @@ body {
   padding:20px;
 }
 
-h1 { text-align:center; }
+h1, h2 {
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.menu {
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap:20px;
+}
 
 .product {
   background:#1c1c1c;
+  border-radius:15px;
   padding:15px;
+}
+
+.product img, .product video {
+  width:100%;
   border-radius:10px;
-  margin-bottom:15px;
+  margin-bottom:10px;
+}
+
+.product h3 {
+  margin-bottom:5px;
+}
+
+.product p {
+  font-size:0.9rem;
+  color:#ccc;
+}
+
+.price {
+  margin:10px 0;
+  font-weight:bold;
+  color:#cfa670;
 }
 
 button {
@@ -28,6 +57,7 @@ button {
   padding:10px 20px;
   border-radius:25px;
   cursor:pointer;
+  width:100%;
 }
 
 button:hover {
@@ -35,10 +65,10 @@ button:hover {
 }
 
 #cart {
-  margin-top:30px;
+  margin-top:40px;
   background:#1a1a1a;
   padding:20px;
-  border-radius:10px;
+  border-radius:15px;
 }
 
 #orderForm {
@@ -58,23 +88,38 @@ input, textarea {
 
 <body>
 
-<h1>🛒 Dry.Coffee76</h1>
+<h1>☕ Dry.Coffee76</h1>
+<h2>Notre Menu</h2>
 
-<div class="product">
-  <h3>Café Latte</h3>
-  <p>4,50€</p>
-  <button onclick="addToCart('Café Latte')">Ajouter au panier</button>
+<div class="menu">
+
+  <!-- PRODUIT 1 -->
+  <div class="product">
+    <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93" alt="Café Latte">
+    <video src="https://www.w3schools.com/html/mov_bbb.mp4" controls></video>
+    <h3>Café Latte</h3>
+    <p>Café doux avec lait chaud et mousse onctueuse.</p>
+    <div class="price">4,50€</div>
+    <button onclick="addToCart('Café Latte - 4,50€')">Ajouter au panier</button>
+  </div>
+
+  <!-- PRODUIT 2 -->
+  <div class="product">
+    <img src="https://images.unsplash.com/photo-1511920170033-f8396924c348" alt="Espresso">
+    <video src="https://www.w3schools.com/html/movie.mp4" controls></video>
+    <h3>Espresso</h3>
+    <p>Café intense, extrait à la perfection.</p>
+    <div class="price">3,00€</div>
+    <button onclick="addToCart('Espresso - 3,00€')">Ajouter au panier</button>
+  </div>
+
 </div>
 
-<div class="product">
-  <h3>Espresso</h3>
-  <p>3,00€</p>
-  <button onclick="addToCart('Espresso')">Ajouter au panier</button>
-</div>
-
+<!-- PANIER -->
 <div id="cart">
-  <h2>Votre panier</h2>
+  <h2>🛒 Votre panier</h2>
   <ul id="cartItems"></ul>
+
   <button onclick="showForm()">Commander</button>
 
   <div id="orderForm">
@@ -87,9 +132,9 @@ input, textarea {
       placeholder="Adresse (ex: 12 rue du Café, Rouen)" />
 
     <textarea id="description" rows="4"
-      placeholder="Description de la commande (ex: Sans sucre, livraison à 18h)"></textarea>
+      placeholder="Description (ex: Sans sucre, livraison à 18h)"></textarea>
 
-    <button onclick="sendToTelegram()">Envoyer la commande</button>
+    <button onclick="sendToTelegram()">Envoyer sur Telegram</button>
   </div>
 </div>
 
@@ -125,9 +170,10 @@ function sendToTelegram() {
 
 📦 Commande : ${name}
 📍 Adresse : ${address}
-📝 Détails : ${description}
+📝 Description : ${description}
 
-☕ Produits : ${cart.join(', ')}`;
+☕ Produits :
+${cart.join('\n')}`;
 
   const url = `https://t.me/share/url?text=${encodeURIComponent(message)}`;
   window.open(url, '_blank');
