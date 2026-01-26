@@ -29,7 +29,7 @@ body {
   object-fit:cover;
 }
 
-/* TOAST NOTIFICATION */
+/* TOAST */
 .toast {
   position:fixed;
   top:-60px;
@@ -50,10 +50,7 @@ body {
 }
 
 /* MENU */
-h2 {
-  text-align:center;
-  margin-bottom:20px;
-}
+h2 { text-align:center; margin-bottom:20px; }
 
 .menu {
   display:grid;
@@ -104,9 +101,7 @@ button {
   width:100%;
 }
 
-button:hover {
-  background:#e1bb88;
-}
+button:hover { background:#e1bb88; }
 
 /* PANIER */
 #cart {
@@ -116,10 +111,7 @@ button:hover {
   border-radius:15px;
 }
 
-#orderForm {
-  display:none;
-  margin-top:20px;
-}
+#orderForm { margin-top:20px; }
 
 input, textarea {
   width:100%;
@@ -127,18 +119,6 @@ input, textarea {
   margin-bottom:10px;
   border-radius:8px;
   border:none;
-}
-
-/* TELEGRAM LINK */
-.telegram-link {
-  text-align:center;
-  margin-top:15px;
-}
-
-.telegram-link a {
-  color:#4da6ff;
-  text-decoration:none;
-  font-weight:bold;
 }
 </style>
 </head>
@@ -163,7 +143,6 @@ input, textarea {
     <video src="static.mp4" controls></video>
     <h3>🍫 Static⚡️</h3>
     <p>Produit Static premium, puissant et fiable.</p>
-
     <div class="prices">
       5 = 50€<br>
       10 = 90€<br>
@@ -171,7 +150,6 @@ input, textarea {
       50 = 300€<br>
       100 = 550€
     </div>
-
     <select id="staticQty">
       <option value="5 - 50€">5 - 50€</option>
       <option value="10 - 90€">10 - 90€</option>
@@ -179,7 +157,6 @@ input, textarea {
       <option value="50 - 300€">50 - 300€</option>
       <option value="100 - 550€">100 - 550€</option>
     </select>
-
     <button onclick="addToCart('🍫 Static⚡️', 'staticQty')">Ajouter au panier</button>
   </div>
 
@@ -188,47 +165,33 @@ input, textarea {
     <video src="blanche.mp4" controls></video>
     <h3>Blanche❄️</h3>
     <p>Blanche de qualité supérieure, pure et raffinée.</p>
-
     <div class="prices">
       1 = 60€<br>
       3 = 160€<br>
       5 = 220€<br>
       10 = 360€
     </div>
-
     <select id="blancheQty">
       <option value="1 - 60€">1 - 60€</option>
       <option value="3 - 160€">3 - 160€</option>
       <option value="5 - 220€">5 - 220€</option>
       <option value="10 - 360€">10 - 360€</option>
     </select>
-
     <button onclick="addToCart('Blanche❄️', 'blancheQty')">Ajouter au panier</button>
   </div>
 
 </div>
 
-<!-- PANIER -->
+<!-- PANIER + FORMULAIRE -->
 <div id="cart">
   <h2>🛒 Panier</h2>
   <ul id="cartItems"></ul>
 
-  <button onclick="showForm()">Commander</button>
-
-  <!-- LIEN TELEGRAM -->
-  <div class="telegram-link">
-    📲 Contact Telegram :  
-    <a href="https://t.me/secretaire_Dry76" target="_blank">@secretaire_Dry76</a>
-  </div>
-
   <div id="orderForm">
     <h3>Formulaire de commande</h3>
-
     <input id="orderName" placeholder="Nom de la commande (ex : Static 25)">
     <input id="address" placeholder="Adresse (ex : 12 rue du Café)">
-    <textarea id="description" rows="4"
-      placeholder="Description (ex : Livraison rapide)"></textarea>
-
+    <textarea id="description" rows="4" placeholder="Description (ex : Livraison rapide)"></textarea>
     <button onclick="sendToTelegram()">Envoyer la commande sur Telegram</button>
   </div>
 </div>
@@ -236,14 +199,14 @@ input, textarea {
 <script>
 let cart = [];
 
+// Notification ajout panier
 function showToast() {
   const toast = document.getElementById('toast');
   toast.classList.add('show');
-  setTimeout(() => {
-    toast.classList.remove('show');
-  }, 2000);
+  setTimeout(() => toast.classList.remove('show'), 2000);
 }
 
+// Ajouter produit au panier
 function addToCart(product, selectId) {
   const qty = document.getElementById(selectId).value;
   cart.push(`${product} → ${qty}`);
@@ -251,6 +214,7 @@ function addToCart(product, selectId) {
   showToast();
 }
 
+// Mettre à jour la liste du panier
 function updateCart() {
   const cartItems = document.getElementById('cartItems');
   cartItems.innerHTML = "";
@@ -261,17 +225,16 @@ function updateCart() {
   });
 }
 
-function showForm() {
-  document.getElementById('orderForm').style.display = 'block';
-}
-
+// Préparer l'envoi vers Telegram
 function sendToTelegram() {
   const name = document.getElementById('orderName').value;
   const address = document.getElementById('address').value;
   const description = document.getElementById('description').value;
 
   const message =
-`🛒 NOUVELLE COMMANDE - Dry.Coffee76
+`📲 Contact Telegram : https://t.me/secretaire_Dry76
+
+🛒 NOUVELLE COMMANDE - Dry.Coffee76
 
 📦 Commande : ${name}
 📍 Adresse : ${address}
@@ -280,10 +243,8 @@ function sendToTelegram() {
 🧾 Panier :
 ${cart.join('\n')}`;
 
-  window.open(
-    `https://t.me/share/url?text=${encodeURIComponent(message)}`,
-    '_blank'
-  );
+  // Ouvre Telegram avec message prêt à envoyer
+  window.open(`https://t.me/share/url?text=${encodeURIComponent(message)}`, '_blank');
 }
 </script>
 
