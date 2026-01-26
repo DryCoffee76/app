@@ -13,6 +13,7 @@ body {
   padding:20px;
 }
 
+/* HEADER */
 .header {
   display:flex;
   align-items:center;
@@ -28,25 +29,32 @@ body {
   object-fit:cover;
 }
 
+/* TOAST NOTIFICATION */
 .toast {
-  position:fixed;
-  top:-60px;
-  left:50%;
-  transform:translateX(-50%);
-  background:#1f1f1f;
-  color:#fff;
-  padding:12px 25px;
-  border-radius:30px;
-  font-size:0.95rem;
-  box-shadow:0 0 15px rgba(0,0,0,0.5);
-  transition:0.3s;
-  z-index:9999;
+  position: fixed;
+  top: 25px;
+  right: -400px;
+  background: linear-gradient(135deg, #cfa670, #e1bb88);
+  color: #111;
+  padding: 14px 26px;
+  border-radius: 14px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  transition: all 0.45s ease;
+  z-index: 9999;
 }
 
 .toast.show {
-  top:20px;
+  right: 25px;
+  opacity: 1;
 }
 
+/* CONTENT */
 h2 { text-align:center; margin-bottom:20px; }
 
 .menu {
@@ -95,25 +103,17 @@ button {
   border-radius:25px;
   cursor:pointer;
   width:100%;
+  font-weight:600;
 }
 
 button:hover { background:#e1bb88; }
 
+/* CART */
 #cart {
   margin-top:40px;
   background:#1a1a1a;
   padding:20px;
   border-radius:15px;
-}
-
-#orderForm { margin-top:20px; }
-
-input, textarea {
-  width:100%;
-  padding:10px;
-  margin-bottom:10px;
-  border-radius:8px;
-  border:none;
 }
 
 .total {
@@ -126,32 +126,44 @@ input, textarea {
   background:#ff4d4d;
   margin-top:5px;
 }
+
 .removeBtn:hover {
   background:#ff6666;
 }
+
+input, textarea {
+  width:100%;
+  padding:10px;
+  margin-bottom:10px;
+  border-radius:8px;
+  border:none;
+}
 </style>
 </head>
+
 <body>
 
-<!-- Notification -->
-<div id="toast" class="toast">Ton produit a été ajouté à ton panier 🛍️</div>
+<!-- NOTIFICATION -->
+<div id="toast" class="toast">🛍️ Produit ajouté au panier</div>
 
-<!-- Header -->
+<!-- HEADER -->
 <div class="header">
   <img src="chaton.jpg" class="logo">
   <h1>Dry.Coffee76</h1>
 </div>
 
-<h2>🛍️📝 Menu Produits</h2>
+<h2>🛍️ Menu Produits</h2>
 
 <div class="menu">
 
-<!-- Static -->
+<!-- AMNESIA -->
 <div class="product">
   <video src="g13.mp4" controls></video>
-  <h3> Amnesia G-13🌳 </h3>
-  <p>Fleure puissante, un bon gout en bouche au gout de crème.</p>
-  <div class="prices">5 = 50€<br>10 = 90€<br>25 = 200€<br>50 = 360€<br>100 = 600€</div>
+  <h3>Amnesia G-13 🌳</h3>
+  <p>Fleur puissante, goût crème intense.</p>
+  <div class="prices">
+    5 = 50€<br>10 = 90€<br>25 = 200€<br>50 = 360€<br>100 = 600€
+  </div>
   <select id="staticQty">
     <option value="5">5</option>
     <option value="10">10</option>
@@ -162,12 +174,14 @@ input, textarea {
   <button onclick="addToCart('Amnesia G-13🌳', 'staticQty')">Ajouter au panier</button>
 </div>
 
-<!-- Blanche -->
+<!-- BLANCHE -->
 <div class="product">
   <video src="blanche.mp4" controls></video>
-  <h3>Blanche❄️</h3>
-  <p>Blanche de qualité supérieure, pure et raffinée.</p>
-  <div class="prices">1 = 60€<br>3 = 160€<br>5 = 220€<br>10 = 360€</div>
+  <h3>Blanche ❄️</h3>
+  <p>Qualité supérieure, pure et raffinée.</p>
+  <div class="prices">
+    1 = 60€<br>3 = 160€<br>5 = 220€<br>10 = 360€
+  </div>
   <select id="blancheQty">
     <option value="1">1</option>
     <option value="3">3</option>
@@ -179,87 +193,79 @@ input, textarea {
 
 </div>
 
-<!-- Panier -->
+<!-- PANIER -->
 <div id="cart">
   <h2>🛒 Panier</h2>
   <ul id="cartItems"></ul>
   <div class="total">Total : <span id="cartTotal">0€</span></div>
 
-  <div id="orderForm">
-    <h3>Formulaire de commande</h3>
-    <input id="orderName" placeholder="Nom de la commande (ex : Static 25)">
-    <input id="address" placeholder="Adresse (ex : 12 rue du Café)">
-    <textarea id="description" rows="4" placeholder="Description (ex : Livraison rapide)"></textarea>
-    <button onclick="sendToTelegram()">Envoyer la commande sur Telegram</button>
-  </div>
+  <h3>Formulaire de commande</h3>
+  <input id="orderName" placeholder="Nom de la commande">
+  <input id="address" placeholder="Adresse">
+  <textarea id="description" rows="4" placeholder="Description"></textarea>
+  <button onclick="sendToTelegram()">Envoyer sur Telegram</button>
 </div>
 
 <script>
 let cart = [];
+
 let cartPrices = {
   'Amnesia G-13🌳': {5:50, 10:90, 25:200, 50:360, 100:600},
   'Blanche❄️': {1:60, 3:160, 5:220, 10:360}
 };
 
-// Notification
 function showToast() {
-  const toast = document.getElementById('toast');
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 2000);
+  const toast = document.getElementById("toast");
+  toast.classList.remove("show");
+  void toast.offsetWidth;
+  toast.classList.add("show");
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2500);
 }
 
-// Ajouter produit
 function addToCart(product, selectId) {
   const qty = parseInt(document.getElementById(selectId).value);
   const price = cartPrices[product][qty];
-  cart.push({name:product, qty:qty, price:price});
+  cart.push({name: product, qty, price});
   updateCart();
   showToast();
 }
 
-// Supprimer produit
 function removeFromCart(index) {
-  cart.splice(index,1);
+  cart.splice(index, 1);
   updateCart();
 }
 
-// Mise à jour du panier
 function updateCart() {
-  const cartItems = document.getElementById('cartItems');
+  const cartItems = document.getElementById("cartItems");
   cartItems.innerHTML = "";
   let total = 0;
-  cart.forEach((item,index)=>{
+
+  cart.forEach((item, index) => {
     total += item.price;
-    const li = document.createElement('li');
-    li.textContent = `${item.name} → ${item.qty} = ${item.price}€ `;
-    const btn = document.createElement('button');
+    const li = document.createElement("li");
+    li.innerHTML = `${item.name} → ${item.qty} = ${item.price}€ `;
+    const btn = document.createElement("button");
     btn.textContent = "Supprimer";
     btn.className = "removeBtn";
-    btn.onclick = ()=>removeFromCart(index);
+    btn.onclick = () => removeFromCart(index);
     li.appendChild(btn);
     cartItems.appendChild(li);
   });
-  document.getElementById('cartTotal').textContent = total + "€";
+
+  document.getElementById("cartTotal").textContent = total + "€";
 }
 
-// Envoyer la commande sur ton contact Telegram
 function sendToTelegram() {
-  const name = document.getElementById('orderName').value;
-  const address = document.getElementById('address').value;
-  const description = document.getElementById('description').value;
-
-  let message = `🛒 NOUVELLE COMMANDE - Dry.Coffee76\n\n`;
-  message += `📦 Commande : ${name}\n📍 Adresse : ${address}\n📝 Description : ${description}\n\n🧾 Panier :\n`;
+  let message = "🛒 NOUVELLE COMMANDE - Dry.Coffee76\n\n";
   cart.forEach(item => {
     message += `${item.name} → ${item.qty} = ${item.price}€\n`;
   });
-
-  // Telegram direct sur ton contact
-  const telegramLink = `https://t.me/secretaire_Dry76?text=${encodeURIComponent(message)}`;
-  window.open(telegramLink,'_blank');
+  window.open(`https://t.me/secretaire_Dry76?text=${encodeURIComponent(message)}`, "_blank");
 }
 </script>
 
 </body>
 </html>
-
