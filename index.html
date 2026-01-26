@@ -133,17 +133,20 @@ input, textarea {
 </head>
 <body>
 
+<!-- Notification -->
 <div id="toast" class="toast">Ton produit a été ajouté à ton panier 🛍️</div>
 
+<!-- Header -->
 <div class="header">
   <img src="chaton.jpg" class="logo">
   <h1>Dry.Coffee76</h1>
 </div>
 
-<h2>📝 Menu Produits</h2>
+<h2>☕ Menu Produits</h2>
 
 <div class="menu">
 
+<!-- Static -->
 <div class="product">
   <video src="static.mp4" controls></video>
   <h3>🍫 Static⚡️</h3>
@@ -159,6 +162,7 @@ input, textarea {
   <button onclick="addToCart('🍫 Static⚡️', 'staticQty')">Ajouter au panier</button>
 </div>
 
+<!-- Blanche -->
 <div class="product">
   <video src="blanche.mp4" controls></video>
   <h3>Blanche❄️</h3>
@@ -175,6 +179,7 @@ input, textarea {
 
 </div>
 
+<!-- Panier -->
 <div id="cart">
   <h2>🛒 Panier</h2>
   <ul id="cartItems"></ul>
@@ -196,12 +201,14 @@ let cartPrices = {
   'Blanche❄️': {1:60, 3:160, 5:220, 10:360}
 };
 
+// Notification
 function showToast() {
   const toast = document.getElementById('toast');
   toast.classList.add('show');
   setTimeout(() => toast.classList.remove('show'), 2000);
 }
 
+// Ajouter produit
 function addToCart(product, selectId) {
   const qty = parseInt(document.getElementById(selectId).value);
   const price = cartPrices[product][qty];
@@ -210,16 +217,18 @@ function addToCart(product, selectId) {
   showToast();
 }
 
+// Supprimer produit
 function removeFromCart(index) {
   cart.splice(index,1);
   updateCart();
 }
 
+// Mise à jour du panier
 function updateCart() {
   const cartItems = document.getElementById('cartItems');
   cartItems.innerHTML = "";
   let total = 0;
-  cart.forEach((item, index)=>{
+  cart.forEach((item,index)=>{
     total += item.price;
     const li = document.createElement('li');
     li.textContent = `${item.name} → ${item.qty} = ${item.price}€ `;
@@ -233,21 +242,23 @@ function updateCart() {
   document.getElementById('cartTotal').textContent = total + "€";
 }
 
+// Envoyer la commande sur ton contact Telegram
 function sendToTelegram() {
   const name = document.getElementById('orderName').value;
   const address = document.getElementById('address').value;
   const description = document.getElementById('description').value;
 
-  let message = `📲 Contact Telegram : https://t.me/secretaire_Dry76\n\n🛒 NOUVELLE COMMANDE - Dry.Coffee76\n\n`;
+  let message = `🛒 NOUVELLE COMMANDE - Dry.Coffee76\n\n`;
   message += `📦 Commande : ${name}\n📍 Adresse : ${address}\n📝 Description : ${description}\n\n🧾 Panier :\n`;
   cart.forEach(item => {
     message += `${item.name} → ${item.qty} = ${item.price}€\n`;
   });
 
-  window.open(`https://t.me/@secretaire_Dry76=${encodeURIComponent(message)}`, '_blank');
+  // Telegram direct sur ton contact
+  const telegramLink = `https://t.me/secretaire_Dry76?text=${encodeURIComponent(message)}`;
+  window.open(telegramLink,'_blank');
 }
 </script>
 
 </body>
 </html>
-
