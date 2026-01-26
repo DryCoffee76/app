@@ -59,10 +59,20 @@ h2 {
   font-size:0.9rem;
 }
 
-.price {
-  color:#cfa670;
-  font-weight:bold;
+.prices {
+  background:#111;
+  padding:10px;
+  border-radius:10px;
   margin:10px 0;
+  font-size:0.9rem;
+}
+
+select {
+  width:100%;
+  padding:8px;
+  border-radius:8px;
+  margin-bottom:10px;
+  border:none;
 }
 
 /* BUTTONS */
@@ -111,34 +121,66 @@ input, textarea {
 
 <body>
 
-<!-- HEADER AVEC LOGO -->
+<!-- HEADER -->
 <div class="header">
-  <img src="chaton.jpg" alt="Logo Dry.Coffee76" class="logo">
+  <img src="chaton.jpg" class="logo">
   <h1>Dry.Coffee76</h1>
 </div>
 
-<h2>☕ Notre Menu</h2>
+<h2>☕ Menu Produits</h2>
 
 <div class="menu">
 
-  <!-- PRODUIT 1 -->
+  <!-- 🍫 STATIC ⚡ -->
   <div class="product">
-    <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93">
-    <video src="https://www.w3schools.com/html/mov_bbb.mp4" controls></video>
-    <h3>Café Latte</h3>
-    <p>Café doux avec lait chaud et mousse onctueuse.</p>
-    <div class="price">4,50€</div>
-    <button onclick="addToCart('Café Latte - 4,50€')">Ajouter au panier</button>
+    <video src="static.mp4" controls></video>
+    <h3>🍫 Static⚡️</h3>
+    <p>Produit Static premium, puissant et fiable.</p>
+
+    <div class="prices">
+      5 = 50€<br>
+      10 = 90€<br>
+      25 = 180€<br>
+      50 = 300€<br>
+      100 = 550€
+    </div>
+
+    <select id="staticQty">
+      <option value="5 - 50€">5 - 50€</option>
+      <option value="10 - 90€">10 - 90€</option>
+      <option value="25 - 180€">25 - 180€</option>
+      <option value="50 - 300€">50 - 300€</option>
+      <option value="100 - 550€">100 - 550€</option>
+    </select>
+
+    <button onclick="addToCart('🍫 Static⚡️', 'staticQty')">
+      Ajouter au panier
+    </button>
   </div>
 
-  <!-- PRODUIT 2 -->
+  <!-- ❄️ BLANCHE -->
   <div class="product">
-    <img src="https://images.unsplash.com/photo-1511920170033-f8396924c348">
-    <video src="https://www.w3schools.com/html/movie.mp4" controls></video>
-    <h3>Espresso</h3>
-    <p>Café intense, corsé et aromatique.</p>
-    <div class="price">3,00€</div>
-    <button onclick="addToCart('Espresso - 3,00€')">Ajouter au panier</button>
+    <video src="blanche.mp4" controls></video>
+    <h3>Blanche❄️</h3>
+    <p>Blanche de qualité supérieure, pure et raffinée.</p>
+
+    <div class="prices">
+      1 = 60€<br>
+      3 = 160€<br>
+      5 = 220€<br>
+      10 = 360€
+    </div>
+
+    <select id="blancheQty">
+      <option value="1 - 60€">1 - 60€</option>
+      <option value="3 - 160€">3 - 160€</option>
+      <option value="5 - 220€">5 - 220€</option>
+      <option value="10 - 360€">10 - 360€</option>
+    </select>
+
+    <button onclick="addToCart('Blanche❄️', 'blancheQty')">
+      Ajouter au panier
+    </button>
   </div>
 
 </div>
@@ -153,14 +195,10 @@ input, textarea {
   <div id="orderForm">
     <h3>Formulaire de commande</h3>
 
-    <input type="text" id="orderName"
-      placeholder="Nom de la commande (ex : Café Latte x2)">
-
-    <input type="text" id="address"
-      placeholder="Adresse (ex : 12 rue du Café, Rouen)">
-
+    <input id="orderName" placeholder="Nom de la commande (ex : Static 25)">
+    <input id="address" placeholder="Adresse (ex : 12 rue du Café)">
     <textarea id="description" rows="4"
-      placeholder="Description (ex : Sans sucre, livraison à 18h)"></textarea>
+      placeholder="Description (ex : Livraison rapide)"></textarea>
 
     <button onclick="sendToTelegram()">Envoyer sur Telegram</button>
   </div>
@@ -169,8 +207,9 @@ input, textarea {
 <script>
 let cart = [];
 
-function addToCart(product) {
-  cart.push(product);
+function addToCart(product, selectId) {
+  const qty = document.getElementById(selectId).value;
+  cart.push(`${product} → ${qty}`);
   updateCart();
 }
 
@@ -200,11 +239,13 @@ function sendToTelegram() {
 📍 Adresse : ${address}
 📝 Description : ${description}
 
-☕ Produits :
+🧾 Panier :
 ${cart.join('\n')}`;
 
-  const url = `https://t.me/share/url?text=${encodeURIComponent(message)}`;
-  window.open(url, '_blank');
+  window.open(
+    `https://t.me/share/url?text=${encodeURIComponent(message)}`,
+    '_blank'
+  );
 }
 </script>
 
