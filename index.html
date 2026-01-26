@@ -29,6 +29,26 @@ body {
   object-fit:cover;
 }
 
+/* TOAST NOTIFICATION */
+.toast {
+  position:fixed;
+  top:-60px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#1f1f1f;
+  color:#fff;
+  padding:12px 25px;
+  border-radius:30px;
+  font-size:0.95rem;
+  box-shadow:0 0 15px rgba(0,0,0,0.5);
+  transition:0.5s;
+  z-index:9999;
+}
+
+.toast.show {
+  top:20px;
+}
+
 /* MENU */
 h2 {
   text-align:center;
@@ -47,7 +67,6 @@ h2 {
   padding:15px;
 }
 
-.product img,
 .product video {
   width:100%;
   border-radius:10px;
@@ -110,16 +129,24 @@ input, textarea {
   border:none;
 }
 
-@media (max-width:600px) {
-  .logo {
-    width:45px;
-    height:45px;
-  }
+/* TELEGRAM LINK */
+.telegram-link {
+  text-align:center;
+  margin-top:15px;
+}
+
+.telegram-link a {
+  color:#4da6ff;
+  text-decoration:none;
+  font-weight:bold;
 }
 </style>
 </head>
 
 <body>
+
+<!-- TOAST -->
+<div id="toast" class="toast">Ton produit a été ajouté à ton panier 🛍️</div>
 
 <!-- HEADER -->
 <div class="header">
@@ -153,9 +180,7 @@ input, textarea {
       <option value="100 - 550€">100 - 550€</option>
     </select>
 
-    <button onclick="addToCart('🍫 Static⚡️', 'staticQty')">
-      Ajouter au panier
-    </button>
+    <button onclick="addToCart('🍫 Static⚡️', 'staticQty')">Ajouter au panier</button>
   </div>
 
   <!-- ❄️ BLANCHE -->
@@ -178,9 +203,7 @@ input, textarea {
       <option value="10 - 360€">10 - 360€</option>
     </select>
 
-    <button onclick="addToCart('Blanche❄️', 'blancheQty')">
-      Ajouter au panier
-    </button>
+    <button onclick="addToCart('Blanche❄️', 'blancheQty')">Ajouter au panier</button>
   </div>
 
 </div>
@@ -192,6 +215,12 @@ input, textarea {
 
   <button onclick="showForm()">Commander</button>
 
+  <!-- LIEN TELEGRAM -->
+  <div class="telegram-link">
+    📲 Contact Telegram :  
+    <a href="https://t.me/secretaire_Dry76" target="_blank">@secretaire_Dry76</a>
+  </div>
+
   <div id="orderForm">
     <h3>Formulaire de commande</h3>
 
@@ -200,17 +229,26 @@ input, textarea {
     <textarea id="description" rows="4"
       placeholder="Description (ex : Livraison rapide)"></textarea>
 
-    <button onclick="sendToTelegram()">Envoyer sur Telegram</button>
+    <button onclick="sendToTelegram()">Envoyer la commande sur Telegram</button>
   </div>
 </div>
 
 <script>
 let cart = [];
 
+function showToast() {
+  const toast = document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2000);
+}
+
 function addToCart(product, selectId) {
   const qty = document.getElementById(selectId).value;
   cart.push(`${product} → ${qty}`);
   updateCart();
+  showToast();
 }
 
 function updateCart() {
