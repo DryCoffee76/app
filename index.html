@@ -13,7 +13,6 @@ body {
   padding:20px;
 }
 
-/* HEADER */
 .header {
   display:flex;
   align-items:center;
@@ -29,7 +28,6 @@ body {
   object-fit:cover;
 }
 
-/* TOAST */
 .toast {
   position:fixed;
   top:-60px;
@@ -41,7 +39,7 @@ body {
   border-radius:30px;
   font-size:0.95rem;
   box-shadow:0 0 15px rgba(0,0,0,0.5);
-  transition:0.5s;
+  transition:0.3s;
   z-index:9999;
 }
 
@@ -49,7 +47,6 @@ body {
   top:20px;
 }
 
-/* MENU */
 h2 { text-align:center; margin-bottom:20px; }
 
 .menu {
@@ -91,7 +88,6 @@ select {
   border:none;
 }
 
-/* BUTTONS */
 button {
   background:#cfa670;
   border:none;
@@ -103,7 +99,6 @@ button {
 
 button:hover { background:#e1bb88; }
 
-/* PANIER */
 #cart {
   margin-top:40px;
   background:#1a1a1a;
@@ -120,72 +115,70 @@ input, textarea {
   border-radius:8px;
   border:none;
 }
+
+.total {
+  font-weight:bold;
+  color:#cfa670;
+  margin-top:10px;
+}
+
+.removeBtn {
+  background:#ff4d4d;
+  margin-top:5px;
+}
+.removeBtn:hover {
+  background:#ff6666;
+}
 </style>
 </head>
-
 <body>
 
-<!-- TOAST -->
 <div id="toast" class="toast">Ton produit a été ajouté à ton panier 🛍️</div>
 
-<!-- HEADER -->
 <div class="header">
   <img src="chaton.jpg" class="logo">
   <h1>Dry.Coffee76</h1>
 </div>
 
-<h2>☕ Menu Produits</h2>
+<h2>📝 Menu Produits</h2>
 
 <div class="menu">
 
-  <!-- 🍫 STATIC ⚡ -->
-  <div class="product">
-    <video src="static.mp4" controls></video>
-    <h3>🍫 Static⚡️</h3>
-    <p>Produit Static premium, puissant et fiable.</p>
-    <div class="prices">
-      5 = 50€<br>
-      10 = 90€<br>
-      25 = 180€<br>
-      50 = 300€<br>
-      100 = 550€
-    </div>
-    <select id="staticQty">
-      <option value="5 - 50€">5 - 50€</option>
-      <option value="10 - 90€">10 - 90€</option>
-      <option value="25 - 180€">25 - 180€</option>
-      <option value="50 - 300€">50 - 300€</option>
-      <option value="100 - 550€">100 - 550€</option>
-    </select>
-    <button onclick="addToCart('🍫 Static⚡️', 'staticQty')">Ajouter au panier</button>
-  </div>
+<div class="product">
+  <video src="static.mp4" controls></video>
+  <h3>🍫 Static⚡️</h3>
+  <p>Produit Static premium, puissant et fiable.</p>
+  <div class="prices">5 = 50€<br>10 = 90€<br>25 = 180€<br>50 = 300€<br>100 = 550€</div>
+  <select id="staticQty">
+    <option value="5">5</option>
+    <option value="10">10</option>
+    <option value="25">25</option>
+    <option value="50">50</option>
+    <option value="100">100</option>
+  </select>
+  <button onclick="addToCart('🍫 Static⚡️', 'staticQty')">Ajouter au panier</button>
+</div>
 
-  <!-- ❄️ BLANCHE -->
-  <div class="product">
-    <video src="blanche.mp4" controls></video>
-    <h3>Blanche❄️</h3>
-    <p>Blanche de qualité supérieure, pure et raffinée.</p>
-    <div class="prices">
-      1 = 60€<br>
-      3 = 160€<br>
-      5 = 220€<br>
-      10 = 360€
-    </div>
-    <select id="blancheQty">
-      <option value="1 - 60€">1 - 60€</option>
-      <option value="3 - 160€">3 - 160€</option>
-      <option value="5 - 220€">5 - 220€</option>
-      <option value="10 - 360€">10 - 360€</option>
-    </select>
-    <button onclick="addToCart('Blanche❄️', 'blancheQty')">Ajouter au panier</button>
-  </div>
+<div class="product">
+  <video src="blanche.mp4" controls></video>
+  <h3>Blanche❄️</h3>
+  <p>Blanche de qualité supérieure, pure et raffinée.</p>
+  <div class="prices">1 = 60€<br>3 = 160€<br>5 = 220€<br>10 = 360€</div>
+  <select id="blancheQty">
+    <option value="1">1</option>
+    <option value="3">3</option>
+    <option value="5">5</option>
+    <option value="10">10</option>
+  </select>
+  <button onclick="addToCart('Blanche❄️', 'blancheQty')">Ajouter au panier</button>
+</div>
 
 </div>
 
-<!-- PANIER + FORMULAIRE -->
 <div id="cart">
   <h2>🛒 Panier</h2>
   <ul id="cartItems"></ul>
+  <div class="total">Total : <span id="cartTotal">0€</span></div>
 
   <div id="orderForm">
     <h3>Formulaire de commande</h3>
@@ -198,52 +191,59 @@ input, textarea {
 
 <script>
 let cart = [];
+let cartPrices = {
+  '🍫 Static⚡️': {5:50, 10:90, 25:180, 50:300, 100:550},
+  'Blanche❄️': {1:60, 3:160, 5:220, 10:360}
+};
 
-// Notification ajout panier
 function showToast() {
   const toast = document.getElementById('toast');
   toast.classList.add('show');
   setTimeout(() => toast.classList.remove('show'), 2000);
 }
 
-// Ajouter produit au panier
 function addToCart(product, selectId) {
-  const qty = document.getElementById(selectId).value;
-  cart.push(`${product} → ${qty}`);
+  const qty = parseInt(document.getElementById(selectId).value);
+  const price = cartPrices[product][qty];
+  cart.push({name:product, qty:qty, price:price});
   updateCart();
   showToast();
 }
 
-// Mettre à jour la liste du panier
+function removeFromCart(index) {
+  cart.splice(index,1);
+  updateCart();
+}
+
 function updateCart() {
   const cartItems = document.getElementById('cartItems');
   cartItems.innerHTML = "";
-  cart.forEach(item => {
+  let total = 0;
+  cart.forEach((item, index)=>{
+    total += item.price;
     const li = document.createElement('li');
-    li.textContent = item;
+    li.textContent = `${item.name} → ${item.qty} = ${item.price}€ `;
+    const btn = document.createElement('button');
+    btn.textContent = "Supprimer";
+    btn.className = "removeBtn";
+    btn.onclick = ()=>removeFromCart(index);
+    li.appendChild(btn);
     cartItems.appendChild(li);
   });
+  document.getElementById('cartTotal').textContent = total + "€";
 }
 
-// Préparer l'envoi vers Telegram
 function sendToTelegram() {
   const name = document.getElementById('orderName').value;
   const address = document.getElementById('address').value;
   const description = document.getElementById('description').value;
 
-  const message =
-`📲 Contact Telegram : https://t.me/secretaire_Dry76
+  let message = `📲 Contact Telegram : https://t.me/secretaire_Dry76\n\n🛒 NOUVELLE COMMANDE - Dry.Coffee76\n\n`;
+  message += `📦 Commande : ${name}\n📍 Adresse : ${address}\n📝 Description : ${description}\n\n🧾 Panier :\n`;
+  cart.forEach(item => {
+    message += `${item.name} → ${item.qty} = ${item.price}€\n`;
+  });
 
-🛒 NOUVELLE COMMANDE - Dry.Coffee76
-
-📦 Commande : ${name}
-📍 Adresse : ${address}
-📝 Description : ${description}
-
-🧾 Panier :
-${cart.join('\n')}`;
-
-  // Ouvre Telegram avec message prêt à envoyer
   window.open(`https://t.me/share/url?text=${encodeURIComponent(message)}`, '_blank');
 }
 </script>
