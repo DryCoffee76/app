@@ -132,6 +132,24 @@ button:hover { background:#e1bb88; }
 
 <body>
 
+<script>
+(function () {
+  const ACCESS_CODE = "452452";
+  const userCode = prompt("🔐 Accès privé – Entrez le code");
+
+  if (userCode !== ACCESS_CODE) {
+    document.body.innerHTML = "";
+    document.body.style.background = "#0f0f0f";
+    document.body.style.color = "#fff";
+    document.body.style.display = "flex";
+    document.body.style.alignItems = "center";
+    document.body.style.justifyContent = "center";
+    document.body.style.height = "100vh";
+    document.body.innerHTML = "<h1>⛔ Accès refusé</h1>";
+  }
+})();
+</script>
+
 <!-- TOAST -->
 <div id="toast" class="toast">🛍️ Produit ajouté au panier</div>
 
@@ -268,4 +286,3 @@ function sendToTelegram() {
 
 </body>
 </html>
-
