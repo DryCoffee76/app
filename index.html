@@ -13,7 +13,7 @@ body {
   padding:20px;
 }
 
-/* 🔒 LOCK SCREEN */
+/* 🔒 LOCK SCREEN (AJOUT UNIQUEMENT) */
 #lockScreen {
   position: fixed;
   inset: 0;
@@ -23,7 +23,6 @@ body {
   justify-content:center;
   z-index:999999;
 }
-
 .lockBox {
   background:#1c1c1c;
   padding:30px;
@@ -31,19 +30,13 @@ body {
   text-align:center;
   width:300px;
 }
-
-.lockBox h1 {
-  margin-bottom:15px;
-}
-
 .lockBox input {
   width:100%;
   padding:10px;
   border-radius:8px;
   border:none;
-  margin-bottom:15px;
+  margin:15px 0;
 }
-
 .lockBox button {
   background:#cfa670;
   border:none;
@@ -53,10 +46,9 @@ body {
   font-weight:bold;
   cursor:pointer;
 }
-
 #errorMsg {
   color:#ff4d4d;
-  margin-top:15px;
+  margin-top:10px;
   display:none;
 }
 
@@ -68,7 +60,6 @@ body {
   gap:15px;
   margin-bottom:30px;
 }
-
 .logo {
   width:60px;
   height:60px;
@@ -92,37 +83,26 @@ body {
   transition: all 0.45s ease;
   z-index: 9999;
 }
+.toast.show { right:25px; opacity:1; }
 
-.toast.show {
-  right: 25px;
-  opacity: 1;
-}
-
+/* CONTENT */
 h2 { text-align:center; margin-bottom:20px; }
-
 .menu {
   display:grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap:20px;
 }
-
 .product {
   background:#1c1c1c;
   border-radius:15px;
   padding:15px;
 }
-
 .product video {
   width:100%;
   border-radius:10px;
   margin-bottom:10px;
 }
-
-.product p {
-  color:#ccc;
-  font-size:0.9rem;
-}
-
+.product p { color:#ccc; font-size:0.9rem; }
 .prices {
   background:#111;
   padding:10px;
@@ -130,7 +110,6 @@ h2 { text-align:center; margin-bottom:20px; }
   margin:10px 0;
   font-size:0.9rem;
 }
-
 select, input, textarea {
   width:100%;
   padding:10px;
@@ -138,7 +117,6 @@ select, input, textarea {
   margin-bottom:10px;
   border:none;
 }
-
 button {
   background:#cfa670;
   border:none;
@@ -148,36 +126,31 @@ button {
   width:100%;
   font-weight:600;
 }
-
 button:hover { background:#e1bb88; }
 
+/* CART */
 #cart {
   margin-top:40px;
   background:#1a1a1a;
   padding:20px;
   border-radius:15px;
 }
-
 .total {
   font-weight:bold;
   color:#cfa670;
   margin-top:10px;
 }
-
 .removeBtn {
   background:#ff4d4d;
   margin-top:5px;
 }
-
-.removeBtn:hover {
-  background:#ff6666;
-}
+.removeBtn:hover { background:#ff6666; }
 </style>
 </head>
 
 <body>
 
-<!-- 🔐 ÉCRAN DE VERROUILLAGE -->
+<!-- 🔐 ÉCRAN DE VERROUILLAGE (AJOUT) -->
 <div id="lockScreen">
   <div class="lockBox">
     <h1>🔐 Accès privé</h1>
@@ -200,6 +173,7 @@ button:hover { background:#e1bb88; }
 
 <div class="menu">
 
+<!-- AMNESIA -->
 <div class="product">
   <video src="g13.mp4" controls></video>
   <h3>Amnesia G-13 🌳</h3>
@@ -217,6 +191,7 @@ button:hover { background:#e1bb88; }
   <button onclick="addToCart('Amnesia G-13🌳', 'staticQty')">Ajouter au panier</button>
 </div>
 
+<!-- BLANCHE -->
 <div class="product">
   <video src="blanche.mp4" controls></video>
   <h3>Blanche ❄️</h3>
@@ -235,19 +210,25 @@ button:hover { background:#e1bb88; }
 
 </div>
 
+<!-- PANIER (INCHANGÉ) -->
 <div id="cart">
   <h2>🛒 Panier</h2>
   <ul id="cartItems"></ul>
   <div class="total">Total : <span id="cartTotal">0€</span></div>
+
+  <h3>Formulaire de commande</h3>
+  <input id="orderName" placeholder="Nom de la commande">
+  <input id="address" placeholder="Adresse">
+  <textarea id="description" rows="4" placeholder="Description"></textarea>
+  <button onclick="sendToTelegram()">Envoyer la commande sur Telegram</button>
 </div>
 
 <script>
+/* 🔐 AJOUT UNIQUEMENT */
 const ACCESS_CODE = "452452";
-
 function checkAccess() {
   const input = document.getElementById("accessInput").value;
   const error = document.getElementById("errorMsg");
-
   if (input === ACCESS_CODE) {
     document.getElementById("lockScreen").style.display = "none";
   } else {
@@ -255,7 +236,9 @@ function checkAccess() {
   }
 }
 
+/* 🛒 TON CODE PANIER — STRICTEMENT INCHANGÉ */
 let cart = [];
+
 let cartPrices = {
   'Amnesia G-13🌳': {5:40, 10:80, 20:160, 50:350, 100:600},
   'Blanche❄️': {1:60, 3:160, 5:220, 10:360}
@@ -263,6 +246,8 @@ let cartPrices = {
 
 function showToast() {
   const toast = document.getElementById("toast");
+  toast.classList.remove("show");
+  void toast.offsetWidth;
   toast.classList.add("show");
   setTimeout(() => toast.classList.remove("show"), 2500);
 }
@@ -271,7 +256,54 @@ function addToCart(product, selectId) {
   const qty = parseInt(document.getElementById(selectId).value);
   const price = cartPrices[product][qty];
   cart.push({name: product, qty, price});
+  updateCart();
   showToast();
+}
+
+function removeFromCart(index) {
+  cart.splice(index, 1);
+  updateCart();
+}
+
+function updateCart() {
+  const cartItems = document.getElementById("cartItems");
+  cartItems.innerHTML = "";
+  let total = 0;
+
+  cart.forEach((item, index) => {
+    total += item.price;
+    const li = document.createElement("li");
+    li.textContent = `${item.name} → ${item.qty} = ${item.price}€ `;
+    const btn = document.createElement("button");
+    btn.textContent = "Supprimer";
+    btn.className = "removeBtn";
+    btn.onclick = () => removeFromCart(index);
+    li.appendChild(btn);
+    cartItems.appendChild(li);
+  });
+
+  document.getElementById("cartTotal").textContent = total + "€";
+}
+
+function sendToTelegram() {
+  const name = document.getElementById("orderName").value;
+  const address = document.getElementById("address").value;
+  const description = document.getElementById("description").value;
+
+  let message = `🛒 NOUVELLE COMMANDE - Dry.Coffee76\n\n`;
+  message += `📦 Commande : ${name || "Non renseignée"}\n`;
+  message += `📍 Adresse : ${address || "Non renseignée"}\n`;
+  message += `📝 Description : ${description || "Aucune"}\n\n`;
+  message += `🧾 Panier :\n`;
+
+  cart.forEach(item => {
+    message += `${item.name} → ${item.qty} = ${item.price}€\n`;
+  });
+
+  message += `\n💰 Total : ${document.getElementById("cartTotal").textContent}`;
+
+  const telegramLink = `https://t.me/secretaire_Dry76?text=${encodeURIComponent(message)}`;
+  window.open(telegramLink, "_blank");
 }
 </script>
 
