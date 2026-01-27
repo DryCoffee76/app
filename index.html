@@ -29,7 +29,7 @@ body {
   object-fit:cover;
 }
 
-/* TOAST NOTIFICATION */
+/* TOAST */
 .toast {
   position: fixed;
   top: 25px;
@@ -41,9 +41,6 @@ body {
   font-size: 0.95rem;
   font-weight: 600;
   box-shadow: 0 10px 30px rgba(0,0,0,0.45);
-  display: flex;
-  align-items: center;
-  gap: 10px;
   opacity: 0;
   transition: all 0.45s ease;
   z-index: 9999;
@@ -88,9 +85,9 @@ h2 { text-align:center; margin-bottom:20px; }
   font-size:0.9rem;
 }
 
-select {
+select, input, textarea {
   width:100%;
-  padding:8px;
+  padding:10px;
   border-radius:8px;
   margin-bottom:10px;
   border:none;
@@ -130,20 +127,12 @@ button:hover { background:#e1bb88; }
 .removeBtn:hover {
   background:#ff6666;
 }
-
-input, textarea {
-  width:100%;
-  padding:10px;
-  margin-bottom:10px;
-  border-radius:8px;
-  border:none;
-}
 </style>
 </head>
 
 <body>
 
-<!-- NOTIFICATION -->
+<!-- TOAST -->
 <div id="toast" class="toast">🛍️ Produit ajouté au panier</div>
 
 <!-- HEADER -->
@@ -203,7 +192,7 @@ input, textarea {
   <input id="orderName" placeholder="Nom de la commande">
   <input id="address" placeholder="Adresse">
   <textarea id="description" rows="4" placeholder="Description"></textarea>
-  <button onclick="sendToTelegram()">Envoyer sur Telegram</button>
+  <button onclick="sendToTelegram()">Envoyer la commande sur Telegram</button>
 </div>
 
 <script>
@@ -219,10 +208,7 @@ function showToast() {
   toast.classList.remove("show");
   void toast.offsetWidth;
   toast.classList.add("show");
-
-  setTimeout(() => {
-    toast.classList.remove("show");
-  }, 2500);
+  setTimeout(() => toast.classList.remove("show"), 2500);
 }
 
 function addToCart(product, selectId) {
@@ -246,7 +232,7 @@ function updateCart() {
   cart.forEach((item, index) => {
     total += item.price;
     const li = document.createElement("li");
-    li.innerHTML = `${item.name} → ${item.qty} = ${item.price}€ `;
+    li.textContent = `${item.name} → ${item.qty} = ${item.price}€ `;
     const btn = document.createElement("button");
     btn.textContent = "Supprimer";
     btn.className = "removeBtn";
@@ -259,11 +245,24 @@ function updateCart() {
 }
 
 function sendToTelegram() {
-  let message = "🛒 NOUVELLE COMMANDE - Dry.Coffee76\n\n";
+  const name = document.getElementById("orderName").value;
+  const address = document.getElementById("address").value;
+  const description = document.getElementById("description").value;
+
+  let message = `🛒 NOUVELLE COMMANDE - Dry.Coffee76\n\n`;
+  message += `📦 Commande : ${name || "Non renseignée"}\n`;
+  message += `📍 Adresse : ${address || "Non renseignée"}\n`;
+  message += `📝 Description : ${description || "Aucune"}\n\n`;
+  message += `🧾 Panier :\n`;
+
   cart.forEach(item => {
     message += `${item.name} → ${item.qty} = ${item.price}€\n`;
   });
-  window.open(`https://t.me/secretaire_Dry76?text=${encodeURIComponent(message)}`, "_blank");
+
+  message += `\n💰 Total : ${document.getElementById("cartTotal").textContent}`;
+
+  const telegramLink = `https://t.me/secretaire_Dry76?text=${encodeURIComponent(message)}`;
+  window.open(telegramLink, "_blank");
 }
 </script>
 
