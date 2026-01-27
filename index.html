@@ -11,6 +11,7 @@ body {
   background:#0f0f0f;
   color:#fff;
   padding:20px;
+  display:none; /* 🔒 SITE CACHÉ PAR DÉFAUT */
 }
 
 /* HEADER */
@@ -128,27 +129,38 @@ button:hover { background:#e1bb88; }
   background:#ff6666;
 }
 </style>
-</head>
-
-<body>
 
 <script>
 (function () {
   const ACCESS_CODE = "452452";
   const userCode = prompt("🔐 Accès privé – Entrez le code");
 
-  if (userCode !== ACCESS_CODE) {
-    document.body.innerHTML = "";
-    document.body.style.background = "#0f0f0f";
-    document.body.style.color = "#fff";
-    document.body.style.display = "flex";
-    document.body.style.alignItems = "center";
-    document.body.style.justifyContent = "center";
-    document.body.style.height = "100vh";
-    document.body.innerHTML = "<h1>⛔ Accès refusé</h1>";
+  if (userCode === ACCESS_CODE) {
+    document.addEventListener("DOMContentLoaded", () => {
+      document.body.style.display = "block";
+    });
+  } else {
+    document.documentElement.innerHTML = `
+      <body style="
+        margin:0;
+        background:#0f0f0f;
+        color:white;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        height:100vh;
+        font-family:Arial;
+      ">
+        <h1>⛔ Accès refusé</h1>
+      </body>
+    `;
   }
 })();
 </script>
+
+</head>
+
+<body>
 
 <!-- TOAST -->
 <div id="toast" class="toast">🛍️ Produit ajouté au panier</div>
@@ -163,7 +175,6 @@ button:hover { background:#e1bb88; }
 
 <div class="menu">
 
-<!-- AMNESIA -->
 <div class="product">
   <video src="g13.mp4" controls></video>
   <h3>Amnesia G-13 🌳</h3>
@@ -181,7 +192,6 @@ button:hover { background:#e1bb88; }
   <button onclick="addToCart('Amnesia G-13🌳', 'staticQty')">Ajouter au panier</button>
 </div>
 
-<!-- BLANCHE -->
 <div class="product">
   <video src="blanche.mp4" controls></video>
   <h3>Blanche ❄️</h3>
@@ -198,19 +208,6 @@ button:hover { background:#e1bb88; }
   <button onclick="addToCart('Blanche❄️', 'blancheQty')">Ajouter au panier</button>
 </div>
 
-</div>
-
-<!-- PANIER -->
-<div id="cart">
-  <h2>🛒 Panier</h2>
-  <ul id="cartItems"></ul>
-  <div class="total">Total : <span id="cartTotal">0€</span></div>
-
-  <h3>Formulaire de commande</h3>
-  <input id="orderName" placeholder="Nom de la commande">
-  <input id="address" placeholder="Adresse">
-  <textarea id="description" rows="4" placeholder="Description"></textarea>
-  <button onclick="sendToTelegram()">Envoyer la commande sur Telegram</button>
 </div>
 
 <script>
@@ -235,52 +232,6 @@ function addToCart(product, selectId) {
   cart.push({name: product, qty, price});
   updateCart();
   showToast();
-}
-
-function removeFromCart(index) {
-  cart.splice(index, 1);
-  updateCart();
-}
-
-function updateCart() {
-  const cartItems = document.getElementById("cartItems");
-  cartItems.innerHTML = "";
-  let total = 0;
-
-  cart.forEach((item, index) => {
-    total += item.price;
-    const li = document.createElement("li");
-    li.textContent = `${item.name} → ${item.qty} = ${item.price}€ `;
-    const btn = document.createElement("button");
-    btn.textContent = "Supprimer";
-    btn.className = "removeBtn";
-    btn.onclick = () => removeFromCart(index);
-    li.appendChild(btn);
-    cartItems.appendChild(li);
-  });
-
-  document.getElementById("cartTotal").textContent = total + "€";
-}
-
-function sendToTelegram() {
-  const name = document.getElementById("orderName").value;
-  const address = document.getElementById("address").value;
-  const description = document.getElementById("description").value;
-
-  let message = `🛒 NOUVELLE COMMANDE - Dry.Coffee76\n\n`;
-  message += `📦 Commande : ${name || "Non renseignée"}\n`;
-  message += `📍 Adresse : ${address || "Non renseignée"}\n`;
-  message += `📝 Description : ${description || "Aucune"}\n\n`;
-  message += `🧾 Panier :\n`;
-
-  cart.forEach(item => {
-    message += `${item.name} → ${item.qty} = ${item.price}€\n`;
-  });
-
-  message += `\n💰 Total : ${document.getElementById("cartTotal").textContent}`;
-
-  const telegramLink = `https://t.me/secretaire_Dry76?text=${encodeURIComponent(message)}`;
-  window.open(telegramLink, "_blank");
 }
 </script>
 
