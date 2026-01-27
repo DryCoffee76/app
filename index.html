@@ -11,7 +11,53 @@ body {
   background:#0f0f0f;
   color:#fff;
   padding:20px;
-  display:none; /* 🔒 SITE CACHÉ PAR DÉFAUT */
+}
+
+/* 🔒 LOCK SCREEN */
+#lockScreen {
+  position: fixed;
+  inset: 0;
+  background:#0f0f0f;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:999999;
+}
+
+.lockBox {
+  background:#1c1c1c;
+  padding:30px;
+  border-radius:15px;
+  text-align:center;
+  width:300px;
+}
+
+.lockBox h1 {
+  margin-bottom:15px;
+}
+
+.lockBox input {
+  width:100%;
+  padding:10px;
+  border-radius:8px;
+  border:none;
+  margin-bottom:15px;
+}
+
+.lockBox button {
+  background:#cfa670;
+  border:none;
+  padding:10px;
+  width:100%;
+  border-radius:25px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+#errorMsg {
+  color:#ff4d4d;
+  margin-top:15px;
+  display:none;
 }
 
 /* HEADER */
@@ -52,7 +98,6 @@ body {
   opacity: 1;
 }
 
-/* CONTENT */
 h2 { text-align:center; margin-bottom:20px; }
 
 .menu {
@@ -106,7 +151,6 @@ button {
 
 button:hover { background:#e1bb88; }
 
-/* CART */
 #cart {
   margin-top:40px;
   background:#1a1a1a;
@@ -129,38 +173,19 @@ button:hover { background:#e1bb88; }
   background:#ff6666;
 }
 </style>
-
-<script>
-(function () {
-  const ACCESS_CODE = "452452";
-  const userCode = prompt("🔐 Accès privé – Entrez le code");
-
-  if (userCode === ACCESS_CODE) {
-    document.addEventListener("DOMContentLoaded", () => {
-      document.body.style.display = "block";
-    });
-  } else {
-    document.documentElement.innerHTML = `
-      <body style="
-        margin:0;
-        background:#0f0f0f;
-        color:white;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        height:100vh;
-        font-family:Arial;
-      ">
-        <h1>⛔ Accès refusé</h1>
-      </body>
-    `;
-  }
-})();
-</script>
-
 </head>
 
 <body>
+
+<!-- 🔐 ÉCRAN DE VERROUILLAGE -->
+<div id="lockScreen">
+  <div class="lockBox">
+    <h1>🔐 Accès privé</h1>
+    <input type="password" id="accessInput" placeholder="Entrez le code">
+    <button onclick="checkAccess()">Entrer</button>
+    <p id="errorMsg">⛔ Accès refusé pour mauvais code</p>
+  </div>
+</div>
 
 <!-- TOAST -->
 <div id="toast" class="toast">🛍️ Produit ajouté au panier</div>
@@ -210,9 +235,27 @@ button:hover { background:#e1bb88; }
 
 </div>
 
-<script>
-let cart = [];
+<div id="cart">
+  <h2>🛒 Panier</h2>
+  <ul id="cartItems"></ul>
+  <div class="total">Total : <span id="cartTotal">0€</span></div>
+</div>
 
+<script>
+const ACCESS_CODE = "452452";
+
+function checkAccess() {
+  const input = document.getElementById("accessInput").value;
+  const error = document.getElementById("errorMsg");
+
+  if (input === ACCESS_CODE) {
+    document.getElementById("lockScreen").style.display = "none";
+  } else {
+    error.style.display = "block";
+  }
+}
+
+let cart = [];
 let cartPrices = {
   'Amnesia G-13🌳': {5:40, 10:80, 20:160, 50:350, 100:600},
   'Blanche❄️': {1:60, 3:160, 5:220, 10:360}
@@ -220,8 +263,6 @@ let cartPrices = {
 
 function showToast() {
   const toast = document.getElementById("toast");
-  toast.classList.remove("show");
-  void toast.offsetWidth;
   toast.classList.add("show");
   setTimeout(() => toast.classList.remove("show"), 2500);
 }
@@ -230,7 +271,6 @@ function addToCart(product, selectId) {
   const qty = parseInt(document.getElementById(selectId).value);
   const price = cartPrices[product][qty];
   cart.push({name: product, qty, price});
-  updateCart();
   showToast();
 }
 </script>
