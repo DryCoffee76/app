@@ -13,40 +13,57 @@ body {
   padding:20px;
 }
 
-h1, h2, h3 { text-align:center; }
+/* HEADER */
+.header {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:15px;
+  margin-bottom:30px;
+}
+.logo {
+  width:55px;
+  height:55px;
+  border-radius:50%;
+  object-fit:cover;
+}
 
 /* ACCUEIL */
 .menu {
   display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap:20px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap:15px;
 }
 
 .product {
   background:#1c1c1c;
-  border-radius:15px;
-  padding:15px;
+  border-radius:12px;
+  padding:10px;
   cursor:pointer;
   transition:0.3s;
 }
-.product:hover { transform:scale(1.03); }
+.product:hover { transform:scale(1.02); }
 
 .product video {
   width:100%;
-  border-radius:10px;
+  border-radius:8px;
 }
+
+.product h3 { font-size:1rem; }
+.product p { font-size:0.85rem; color:#ccc; }
 
 .prices {
   background:#111;
   padding:10px;
   border-radius:10px;
   margin:10px 0;
+  font-size:0.9rem;
 }
 
 /* PAGE PRODUIT */
 #productPage {
   display:none;
-  max-width:600px;
+  max-width:500px;
   margin:auto;
 }
 
@@ -55,10 +72,10 @@ button {
   border:none;
   padding:12px;
   width:100%;
-  border-radius:30px;
+  border-radius:25px;
   font-weight:bold;
   cursor:pointer;
-  margin-top:15px;
+  margin-top:12px;
 }
 
 .backBtn {
@@ -69,9 +86,9 @@ button {
 #orderForm {
   display:none;
   background:#1a1a1a;
-  padding:20px;
+  padding:18px;
   border-radius:15px;
-  margin-top:25px;
+  margin-top:20px;
 }
 
 input, textarea {
@@ -86,7 +103,11 @@ input, textarea {
 
 <body>
 
-<h1>Dry.Coffee76</h1>
+<!-- HEADER -->
+<div class="header">
+  <img src="chaton.jpg" class="logo">
+  <h1>Dry.Coffee76</h1>
+</div>
 
 <!-- PAGE ACCUEIL -->
 <div id="menu" class="menu">
@@ -155,8 +176,12 @@ const products = {
   }
 };
 
+let currentProduct = "";
+
 function openProduct(key) {
   const p = products[key];
+  currentProduct = p.title;
+
   document.getElementById("menu").style.display = "none";
   document.getElementById("productPage").style.display = "block";
   document.getElementById("orderForm").style.display = "none";
@@ -178,10 +203,21 @@ function showForm() {
 }
 
 function sendToSignal() {
-  window.open(
-    "https://signal.me/#eu/zDlrwpOaIgtAppSpjmJPiE_6iHX0bJ76qWO1X-fZhNHd1Xm3gVtGFp7NfxGRLNIQ",
-    "_blank"
-  );
+  const name = document.getElementById("orderName").value || "Non renseigné";
+  const address = document.getElementById("address").value || "Non renseignée";
+  const description = document.getElementById("description").value || "Aucune";
+
+  let message =
+`🛒 NOUVELLE COMMANDE - Dry.Coffee76
+
+📦 Produit : ${currentProduct}
+👤 Nom : ${name}
+📍 Adresse : ${address}
+📝 Description : ${description}
+`;
+
+  const signalURL = "signal://send?text=" + encodeURIComponent(message);
+  window.location.href = signalURL;
 }
 </script>
 
