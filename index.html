@@ -13,297 +13,175 @@ body {
   padding:20px;
 }
 
-/* 🔒 LOCK SCREEN (AJOUT UNIQUEMENT) */
-#lockScreen {
-  position: fixed;
-  inset: 0;
-  background:#0f0f0f;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:999999;
-}
-.lockBox {
-  background:#1c1c1c;
-  padding:30px;
-  border-radius:15px;
-  text-align:center;
-  width:300px;
-}
-.lockBox input {
-  width:100%;
-  padding:10px;
-  border-radius:8px;
-  border:none;
-  margin:15px 0;
-}
-.lockBox button {
-  background:#cfa670;
-  border:none;
-  padding:10px;
-  width:100%;
-  border-radius:25px;
-  font-weight:bold;
-  cursor:pointer;
-}
-#errorMsg {
-  color:#ff4d4d;
-  margin-top:10px;
-  display:none;
-}
+h1, h2, h3 { text-align:center; }
 
-/* HEADER */
-.header {
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:15px;
-  margin-bottom:30px;
-}
-.logo {
-  width:60px;
-  height:60px;
-  border-radius:50%;
-  object-fit:cover;
-}
-
-/* TOAST */
-.toast {
-  position: fixed;
-  top: 25px;
-  right: -400px;
-  background: linear-gradient(135deg, #cfa670, #e1bb88);
-  color: #111;
-  padding: 14px 26px;
-  border-radius: 14px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.45);
-  opacity: 0;
-  transition: all 0.45s ease;
-  z-index: 9999;
-}
-.toast.show { right:25px; opacity:1; }
-
-/* CONTENT */
-h2 { text-align:center; margin-bottom:20px; }
+/* ACCUEIL */
 .menu {
   display:grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap:20px;
 }
+
 .product {
   background:#1c1c1c;
   border-radius:15px;
   padding:15px;
+  cursor:pointer;
+  transition:0.3s;
 }
+.product:hover { transform:scale(1.03); }
+
 .product video {
   width:100%;
   border-radius:10px;
-  margin-bottom:10px;
 }
-.product p { color:#ccc; font-size:0.9rem; }
+
 .prices {
   background:#111;
   padding:10px;
   border-radius:10px;
   margin:10px 0;
-  font-size:0.9rem;
 }
-select, input, textarea {
-  width:100%;
-  padding:10px;
-  border-radius:8px;
-  margin-bottom:10px;
-  border:none;
+
+/* PAGE PRODUIT */
+#productPage {
+  display:none;
+  max-width:600px;
+  margin:auto;
 }
+
 button {
   background:#cfa670;
   border:none;
-  padding:10px;
-  border-radius:25px;
-  cursor:pointer;
+  padding:12px;
   width:100%;
-  font-weight:600;
+  border-radius:30px;
+  font-weight:bold;
+  cursor:pointer;
+  margin-top:15px;
 }
-button:hover { background:#e1bb88; }
 
-/* CART */
-#cart {
-  margin-top:40px;
+.backBtn {
+  background:#333;
+}
+
+/* FORMULAIRE */
+#orderForm {
+  display:none;
   background:#1a1a1a;
   padding:20px;
   border-radius:15px;
+  margin-top:25px;
 }
-.total {
-  font-weight:bold;
-  color:#cfa670;
-  margin-top:10px;
+
+input, textarea {
+  width:100%;
+  padding:10px;
+  border-radius:8px;
+  border:none;
+  margin-bottom:10px;
 }
-.removeBtn {
-  background:#ff4d4d;
-  margin-top:5px;
-}
-.removeBtn:hover { background:#ff6666; }
 </style>
 </head>
 
 <body>
 
-<!-- 🔐 ÉCRAN DE VERROUILLAGE (AJOUT) -->
-<div id="lockScreen">
-  <div class="lockBox">
-    <h1>🔐 Accès privé</h1>
-    <input type="password" id="accessInput" placeholder="Entrez le code">
-    <button onclick="checkAccess()">Entrer</button>
-    <p id="errorMsg">⛔ Accès refusé pour mauvais code</p>
+<h1>Dry.Coffee76</h1>
+
+<!-- PAGE ACCUEIL -->
+<div id="menu" class="menu">
+
+  <div class="product" onclick="openProduct('amnesia')">
+    <video src="g13.mp4" muted></video>
+    <h3>Amnesia G-13 🌳</h3>
+    <p>Fleur puissante, goût crème intense.</p>
   </div>
-</div>
 
-<!-- TOAST -->
-<div id="toast" class="toast">🛍️ Produit ajouté au panier</div>
-
-<!-- HEADER -->
-<div class="header">
-  <img src="chaton.jpg" class="logo">
-  <h1>Dry.Coffee76</h1>
-</div>
-
-<h2>🛍️ Menu Produits</h2>
-
-<div class="menu">
-
-<!-- AMNESIA -->
-<div class="product">
-  <video src="g13.mp4" controls></video>
-  <h3>Amnesia G-13 🌳</h3>
-  <p>Fleur puissante, goût crème intense.</p>
-  <div class="prices">
-    5 = 40€<br>10 = 80€<br>20 = 160€<br>50 = 350€<br>100 = 600€
+  <div class="product" onclick="openProduct('blanche')">
+    <video src="blanche.mp4" muted></video>
+    <h3>Blanche ❄️</h3>
+    <p>Qualité supérieure, pure et raffinée.</p>
   </div>
-  <select id="staticQty">
-    <option value="5">5</option>
-    <option value="10">10</option>
-    <option value="25">25</option>
-    <option value="50">50</option>
-    <option value="100">100</option>
-  </select>
-  <button onclick="addToCart('Amnesia G-13🌳', 'staticQty')">Ajouter au panier</button>
+
 </div>
 
-<!-- BLANCHE -->
-<div class="product">
-  <video src="blanche.mp4" controls></video>
-  <h3>Blanche ❄️</h3>
-  <p>Qualité supérieure, pure et raffinée.</p>
-  <div class="prices">
-    1 = 60€<br>3 = 160€<br>5 = 220€<br>10 = 360€
+<!-- PAGE PRODUIT -->
+<div id="productPage">
+
+  <button class="backBtn" onclick="goHome()">🏠 Accueil</button>
+
+  <video id="prodVideo" controls></video>
+  <h2 id="prodTitle"></h2>
+  <p id="prodDesc"></p>
+  <div class="prices" id="prodPrices"></div>
+
+  <button onclick="showForm()">🛒 Commander</button>
+
+  <!-- FORMULAIRE -->
+  <div id="orderForm">
+    <h3>📋 Formulaire de commande</h3>
+    <input id="orderName" placeholder="Nom de la commande">
+    <input id="address" placeholder="Adresse">
+    <textarea id="description" rows="4" placeholder="Description"></textarea>
+    <button onclick="sendToSignal()">📲 Envoyer la commande</button>
   </div>
-  <select id="blancheQty">
-    <option value="1">1</option>
-    <option value="3">3</option>
-    <option value="5">5</option>
-    <option value="10">10</option>
-  </select>
-  <button onclick="addToCart('Blanche❄️', 'blancheQty')">Ajouter au panier</button>
-</div>
 
-</div>
-
-<!-- PANIER (INCHANGÉ) -->
-<div id="cart">
-  <h2>🛒 Panier</h2>
-  <ul id="cartItems"></ul>
-  <div class="total">Total : <span id="cartTotal">0€</span></div>
-
-  <h3>Formulaire de commande</h3>
-  <input id="orderName" placeholder="Nom de la commande">
-  <input id="address" placeholder="Adresse">
-  <textarea id="description" rows="4" placeholder="Description"></textarea>
-  <button onclick="sendToTelegram()">Envoyer la commande sur Telegram</button>
 </div>
 
 <script>
-/* 🔐 AJOUT UNIQUEMENT */
-const ACCESS_CODE = "452452";
-function checkAccess() {
-  const input = document.getElementById("accessInput").value;
-  const error = document.getElementById("errorMsg");
-  if (input === ACCESS_CODE) {
-    document.getElementById("lockScreen").style.display = "none";
-  } else {
-    error.style.display = "block";
+const products = {
+  amnesia: {
+    title: "Amnesia G-13 🌳",
+    desc: "Fleur puissante, goût crème intense.",
+    video: "g13.mp4",
+    prices: `
+      5 = 40€<br>
+      10 = 80€<br>
+      20 = 160€<br>
+      50 = 350€<br>
+      100 = 600€
+    `
+  },
+  blanche: {
+    title: "Blanche ❄️",
+    desc: "Qualité supérieure, pure et raffinée.",
+    video: "blanche.mp4",
+    prices: `
+      1 = 60€<br>
+      3 = 160€<br>
+      5 = 220€<br>
+      10 = 360€
+    `
   }
-}
-
-/* 🛒 TON CODE PANIER — STRICTEMENT INCHANGÉ */
-let cart = [];
-
-let cartPrices = {
-  'Amnesia G-13🌳': {5:40, 10:80, 20:160, 50:350, 100:600},
-  'Blanche❄️': {1:60, 3:160, 5:220, 10:360}
 };
 
-function showToast() {
-  const toast = document.getElementById("toast");
-  toast.classList.remove("show");
-  void toast.offsetWidth;
-  toast.classList.add("show");
-  setTimeout(() => toast.classList.remove("show"), 2500);
+function openProduct(key) {
+  const p = products[key];
+  document.getElementById("menu").style.display = "none";
+  document.getElementById("productPage").style.display = "block";
+  document.getElementById("orderForm").style.display = "none";
+
+  document.getElementById("prodTitle").innerHTML = p.title;
+  document.getElementById("prodDesc").innerHTML = p.desc;
+  document.getElementById("prodPrices").innerHTML = p.prices;
+  document.getElementById("prodVideo").src = p.video;
 }
 
-function addToCart(product, selectId) {
-  const qty = parseInt(document.getElementById(selectId).value);
-  const price = cartPrices[product][qty];
-  cart.push({name: product, qty, price});
-  updateCart();
-  showToast();
+function goHome() {
+  document.getElementById("productPage").style.display = "none";
+  document.getElementById("menu").style.display = "grid";
+  document.getElementById("orderForm").style.display = "none";
 }
 
-function removeFromCart(index) {
-  cart.splice(index, 1);
-  updateCart();
+function showForm() {
+  document.getElementById("orderForm").style.display = "block";
 }
 
-function updateCart() {
-  const cartItems = document.getElementById("cartItems");
-  cartItems.innerHTML = "";
-  let total = 0;
-
-  cart.forEach((item, index) => {
-    total += item.price;
-    const li = document.createElement("li");
-    li.textContent = `${item.name} → ${item.qty} = ${item.price}€ `;
-    const btn = document.createElement("button");
-    btn.textContent = "Supprimer";
-    btn.className = "removeBtn";
-    btn.onclick = () => removeFromCart(index);
-    li.appendChild(btn);
-    cartItems.appendChild(li);
-  });
-
-  document.getElementById("cartTotal").textContent = total + "€";
-}
-
-function sendToTelegram() {
-  const name = document.getElementById("orderName").value;
-  const address = document.getElementById("address").value;
-  const description = document.getElementById("description").value;
-
-  let message = `🛒 NOUVELLE COMMANDE - Dry.Coffee76\n\n`;
-  message += `📦 Commande : ${name || "Non renseignée"}\n`;
-  message += `📍 Adresse : ${address || "Non renseignée"}\n`;
-  message += `📝 Description : ${description || "Aucune"}\n\n`;
-  message += `🧾 Panier :\n`;
-
-  cart.forEach(item => {
-    message += `${item.name} → ${item.qty} = ${item.price}€\n`;
-  });
-
-  message += `\n💰 Total : ${document.getElementById("cartTotal").textContent}`;
-
-  const telegramLink = `https://t.me/secretaire_Dry76?text=${encodeURIComponent(message)}`;
-  window.open(telegramLink, "_blank");
+function sendToSignal() {
+  window.open(
+    "https://signal.me/#eu/zDlrwpOaIgtAppSpjmJPiE_6iHX0bJ76qWO1X-fZhNHd1Xm3gVtGFp7NfxGRLNIQ",
+    "_blank"
+  );
 }
 </script>
 
