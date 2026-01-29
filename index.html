@@ -19,13 +19,20 @@ body {
   align-items:center;
   justify-content:center;
   gap:15px;
-  margin-bottom:30px;
+  flex-direction: column;
+  margin-bottom:20px;
 }
 .logo {
   width:55px;
   height:55px;
   border-radius:50%;
   object-fit:cover;
+}
+.header-message {
+  font-size:0.9rem;
+  color:#ccc;
+  margin-top:5px;
+  text-align:center;
 }
 
 /* ACCUEIL */
@@ -45,9 +52,9 @@ body {
 .product:hover { transform:scale(1.02); }
 
 .product video {
-  width:200px;       /* largeur réduite */
-  height:120px;      /* hauteur fixe */
-  object-fit:cover;  /* la vidéo reste cadrée */
+  width:200px;       /* vidéos sur l'accueil */
+  height:120px;
+  object-fit:cover;
   border-radius:8px;
 }
 
@@ -69,7 +76,15 @@ body {
   margin:auto;
 }
 
-button {
+#productPage video {
+  width:180px;      /* vidéo beaucoup plus petite sur page produit */
+  height:100px;
+  object-fit:cover;
+  border-radius:8px;
+  margin-bottom:10px;
+}
+
+button, #orderBtn {
   background:#cfa670;
   border:none;
   padding:12px;
@@ -81,6 +96,17 @@ button {
   text-decoration:none;
   display:inline-block;
   text-align:center;
+  transition:0.3s;
+}
+#orderBtn {
+  background: linear-gradient(90deg, #cfa670, #e6d3a1);
+  color:#000;
+  font-weight:bold;
+  font-size:1rem;
+}
+#orderBtn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px #cfa670;
 }
 
 .backBtn {
@@ -95,6 +121,7 @@ button {
 <div class="header">
   <img src="chaton.jpg" class="logo">
   <h1>Dry.Coffee76</h1>
+  <div class="header-message">Appuyez sur les produits ci-dessous👇</div>
 </div>
 
 <!-- PAGE ACCUEIL -->
