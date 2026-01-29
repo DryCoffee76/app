@@ -45,7 +45,9 @@ body {
 .product:hover { transform:scale(1.02); }
 
 .product video {
-  width:100%;
+  width:200px;       /* largeur réduite */
+  height:120px;      /* hauteur fixe */
+  object-fit:cover;  /* la vidéo reste cadrée */
   border-radius:8px;
 }
 
@@ -76,27 +78,13 @@ button {
   font-weight:bold;
   cursor:pointer;
   margin-top:12px;
+  text-decoration:none;
+  display:inline-block;
+  text-align:center;
 }
 
 .backBtn {
   background:#333;
-}
-
-/* FORMULAIRE */
-#orderForm {
-  display:none;
-  background:#1a1a1a;
-  padding:18px;
-  border-radius:15px;
-  margin-top:20px;
-}
-
-input, textarea {
-  width:100%;
-  padding:10px;
-  border-radius:8px;
-  border:none;
-  margin-bottom:10px;
 }
 </style>
 </head>
@@ -136,16 +124,10 @@ input, textarea {
   <p id="prodDesc"></p>
   <div class="prices" id="prodPrices"></div>
 
-  <button onclick="showForm()">🛒 Commander</button>
-
-  <!-- FORMULAIRE -->
-  <div id="orderForm">
-    <h3>📋 Formulaire de commande</h3>
-    <input id="orderName" placeholder="Nom de la commande">
-    <input id="address" placeholder="Adresse">
-    <textarea id="description" rows="4" placeholder="Description"></textarea>
-    <button onclick="sendToSignal()">📲 Envoyer la commande</button>
-  </div>
+  <!-- BOUTON COMMANDER -->
+  <a id="orderBtn" href="https://signal.me/#eu/zDlrwpOaIgtAppSpjmJPiE_6iHX0bJ76qWO1X-fZhNHd1Xm3gVtGFp7NfxGRLNIQ" target="_blank">
+    🛒 Commander
+  </a>
 
 </div>
 
@@ -184,7 +166,6 @@ function openProduct(key) {
 
   document.getElementById("menu").style.display = "none";
   document.getElementById("productPage").style.display = "block";
-  document.getElementById("orderForm").style.display = "none";
 
   document.getElementById("prodTitle").innerHTML = p.title;
   document.getElementById("prodDesc").innerHTML = p.desc;
@@ -195,29 +176,6 @@ function openProduct(key) {
 function goHome() {
   document.getElementById("productPage").style.display = "none";
   document.getElementById("menu").style.display = "grid";
-  document.getElementById("orderForm").style.display = "none";
-}
-
-function showForm() {
-  document.getElementById("orderForm").style.display = "block";
-}
-
-function sendToSignal() {
-  const name = document.getElementById("orderName").value || "Non renseigné";
-  const address = document.getElementById("address").value || "Non renseignée";
-  const description = document.getElementById("description").value || "Aucune";
-
-  let message =
-`🛒 NOUVELLE COMMANDE - Dry.Coffee76
-
-📦 Produit : ${currentProduct}
-👤 Nom : ${name}
-📍 Adresse : ${address}
-📝 Description : ${description}
-`;
-
-  const signalURL = "https://signal.me/#eu/zDlrwpOaIgtAppSpjmJPiE_6iHX0bJ76qWO1X-fZhNHd1Xm3gVtGFp7NfxGRLNIQ?text=" + encodeURIComponent(message);
-  window.location.href = signalURL;
 }
 </script>
 
