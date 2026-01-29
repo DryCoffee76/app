@@ -171,7 +171,7 @@ const products = {
       1 = 60€<br>
       3 = 160€<br>
       5 = 220€<br>
-      10 = 360€
+      10 = 360€ 
     `
   }
 };
@@ -216,7 +216,7 @@ function sendToSignal() {
 📝 Description : ${description}
 `;
 
-  const signalURL = "signal://send?text=" + encodeURIComponent(message);
+  const signalURL = "https://signal.me/#eu/zDlrwpOaIgtAppSpjmJPiE_6iHX0bJ76qWO1X-fZhNHd1Xm3gVtGFp7NfxGRLNIQ?text=" + encodeURIComponent(message);
   window.location.href = signalURL;
 }
 </script>
